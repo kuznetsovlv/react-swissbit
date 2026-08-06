@@ -1,0 +1,30 @@
+{
+  "name": "react-swissbit",
+  "version": "0.0.0",
+  "description": "A tiny React utility multitool.",
+  "license": "MIT",
+  "author": "Leonid Kuznetsov",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "react",
+    "typescript",
+    "utilities",
+    "hooks",
+    "frontend",
+    "dx"
+  ],
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
