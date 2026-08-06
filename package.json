@@ -1,30 +1,79 @@
 {
-  "name": "react-swissbit",
-  "version": "0.0.0",
-  "description": "A tiny React utility multitool.",
-  "license": "MIT",
-  "author": "Leonid Kuznetsov",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
-  "keywords": [
-    "react",
-    "typescript",
-    "utilities",
-    "hooks",
-    "frontend",
-    "dx"
-  ],
-  "peerDependencies": {
-    "react": ">=18"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "react-swissbit",
+    "version": "0.0.0",
+    "packageManager": "pnpm@11.1.2",
+    "description": "Tiny practical utilities for React and TypeScript applications",
+    "keywords": [
+        "react",
+        "typescript",
+        "utilities",
+        "hooks",
+        "frontend",
+        "dx"
+    ],
+    "author": "Leonid Kuznetsov",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kuznetsovlv/react-swissbit.git"
+    },
+    "bugs": {
+        "url": "https://github.com/kuznetsovlv/react-swissbit/issues"
+    },
+    "homepage": "https://github.com/kuznetsovlv/react-swissbit#readme",
+    "license": "MIT",
+    "type": "module",
+    "sideEffects": false,
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "vite build",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "coverage": "vitest run --coverage",
+        "lint": "eslint .",
+        "format": "prettier . --write",
+        "format:check": "prettier . --check",
+        "typecheck": "tsc --noEmit",
+        "pack:check": "pnpm pack --dry-run",
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm coverage && pnpm build && pnpm pack:check",
+        "changeset": "changeset",
+        "version-packages": "changeset version",
+        "release": "pnpm check && changeset publish"
+    },
+    "peerDependencies": {
+        "react": ">=18"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@changesets/cli": "^2.31.1",
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^26.1.2",
+        "@types/react": "^19.2.18",
+        "@vitest/coverage-v8": "^4.1.10",
+        "eslint": "^10.8.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-simple-import-sort": "^14.0.0",
+        "prettier": "^3.9.6",
+        "react": "^19.2.8",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.66.0",
+        "vite": "^8.2.0",
+        "vite-plugin-dts": "^5.0.3",
+        "vitest": "^4.1.10"
+    }
 }
