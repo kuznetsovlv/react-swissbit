@@ -1,0 +1,52 @@
+name: CI
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+jobs:
+    quality-checks:
+        name: Quality checks
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+
+            - name: Setup pnpm and Node.js
+              uses: pnpm/setup@v2
+              with:
+                  runtime: node@24
+                  cache: true
+                  install: false
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Check formatting
+              run: pnpm format:check
+
+            - name: Run ESLint
+              run: pnpm lint
+
+            - name: Run TypeScript check
+              run: pnpm typecheck
+
+            - name: Run unit tests
+              run: pnpm test
+
+            - name: Generate test coverage
+              run: pnpm coverage
+
+            - name: Build package
+              run: pnpm build
+
+            - name: Check package contents
+              run: pnpm pack:check
