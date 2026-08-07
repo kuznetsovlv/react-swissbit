@@ -1,0 +1,75 @@
+name: Release
+
+on:
+    push:
+        branches:
+            - main
+
+concurrency:
+    group: release-${{ github.ref }}
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    checks:
+        name: Release checks
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 24
+                  cache: pnpm
+                  cache-dependency-path: pnpm-lock.yaml
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Run checks
+              run: pnpm check
+
+    release:
+        name: Version or publish package
+        runs-on: ubuntu-latest
+        needs: checks
+        environment: npm
+
+        permissions:
+            contents: write
+            pull-requests: write
+            id-token: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 24
+                  registry-url: https://registry.npmjs.org
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Create release PR or publish
+              uses: changesets/action@v1
+              with:
+                  version: pnpm version-packages
+                  publish: pnpm exec changeset publish
+                  commit: 'chore: release'
+                  title: 'chore: release'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.CHANGESETS_GITHUB_TOKEN }}
