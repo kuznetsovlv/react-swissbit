@@ -1,0 +1,55 @@
+name: CI
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - '**'
+
+permissions:
+    contents: read
+
+jobs:
+    quality-checks:
+        name: ${{ github.event_name == 'pull_request' && 'PR quality checks' || 'Branch quality checks' }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: pnpm
+                  cache-dependency-path: pnpm-lock.yaml
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Check formatting
+              run: pnpm format:check
+
+            - name: Run ESLint
+              run: pnpm lint
+
+            - name: Run TypeScript check
+              run: pnpm typecheck
+
+            - name: Run unit tests
+              run: pnpm test
+
+            - name: Generate test coverage
+              run: pnpm coverage
+
+            - name: Build package
+              run: pnpm build
+
+            - name: Check package contents
+              run: pnpm pack:check
