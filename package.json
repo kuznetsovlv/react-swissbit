@@ -2,12 +2,13 @@
     "name": "react-swissbit",
     "version": "0.0.0",
     "packageManager": "pnpm@11.1.2",
-    "description": "Tiny practical utilities for React and TypeScript applications",
+    "description": "Small practical utilities for React and TypeScript applications",
     "keywords": [
         "react",
+        "react-hooks",
+        "hooks",
         "typescript",
         "utilities",
-        "hooks",
         "frontend",
         "dx"
     ],
@@ -36,6 +37,7 @@
     "files": [
         "dist",
         "README.md",
+        "CHANGELOG.md",
         "LICENSE"
     ],
     "scripts": {
@@ -51,7 +53,7 @@
         "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm coverage && pnpm build && pnpm pack:check",
         "changeset": "changeset",
         "version-packages": "changeset version",
-        "release": "pnpm check && changeset publish"
+        "release": "pnpm check && pnpm exec changeset publish"
     },
     "peerDependencies": {
         "react": ">=18"
