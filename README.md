@@ -100,12 +100,12 @@ useToggle(initialValue: boolean): [
 
 The returned tuple contains:
 
-| Value | Description |
-| --- | --- |
-| `value` | Current boolean state |
-| `on()` | Sets the value to `true` |
-| `off()` | Sets the value to `false` |
-| `toggle()` | Inverts the current value |
+| Value        | Description               |
+| ------------ | ------------------------- |
+| `value`      | Current boolean state     |
+| `on()`       | Sets the value to `true`  |
+| `off()`      | Sets the value to `false` |
+| `toggle()`   | Inverts the current value |
 | `set(value)` | Sets the value explicitly |
 
 The methods object and all of its methods have stable references across renders,
