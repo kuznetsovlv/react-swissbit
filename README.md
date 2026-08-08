@@ -26,22 +26,103 @@ The project is intended to stay small and modular:
 - tree-shakeable exports;
 - automated tests, linting, type checking, coverage, and package validation.
 
-## Planned direction
-
-The first utilities are expected to focus primarily on React hooks and small
-frontend helpers.
-
-Possible early additions include a boolean state toggle hook, a stable event
-callback helper, and other small wrappers around common React patterns.
-
-Names and APIs may still change before `0.1.0`.
-
 ## Installation
 
-There is currently no usable release to install.
+Install `react-swissbit` with your preferred package manager.
 
-The package name is reserved on npm as `react-swissbit@0.0.0`. Installation
-instructions will be added when the first public API is released.
+### npm
+
+```bash
+    npm install react-swissbit
+```
+
+### yarn
+
+```bash
+    yarn add react-swissbit
+```
+
+### pnpm
+
+```bash
+    pnpm add react-swissbit
+```
+
+React 18 or newer is required as a peer dependency.
+
+## Usage
+
+Utilities are exported directly from `react-swissbit`:
+
+```ts
+import {useToggle} from 'react-swissbit';
+```
+
+### Hooks
+
+#### `useToggle`
+
+Manages a boolean state and provides a set of convenience methods for changing
+it.
+
+```tsx
+import {useToggle} from 'react-swissbit';
+
+function Example() {
+    const [isOpen, {on, off, toggle, set}] = useToggle(false);
+
+    return (
+        <div>
+            <p>{isOpen ? 'Open' : 'Closed'}</p>
+
+            <button onClick={on}>Open</button>
+            <button onClick={off}>Close</button>
+            <button onClick={toggle}>Toggle</button>
+            <button onClick={() => set(true)}>Set open</button>
+        </div>
+    );
+}
+```
+
+Signature:
+
+```ts
+useToggle(initialValue: boolean): [
+    boolean,
+    {
+        on: () => void;
+        off: () => void;
+        toggle: () => void;
+        set: (value: boolean) => void;
+    },
+];
+```
+
+The returned tuple contains:
+
+| Value        | Description               |
+| ------------ | ------------------------- |
+| `value`      | Current boolean state     |
+| `on()`       | Sets the value to `true`  |
+| `off()`      | Sets the value to `false` |
+| `toggle()`   | Inverts the current value |
+| `set(value)` | Sets the value explicitly |
+
+The methods object and all of its methods have stable references across renders,
+so they can safely be passed to memoized components or used as hook
+dependencies.
+
+`initialValue` is only used to initialize the state. Changing it on a later
+render does not reset the current value.
+
+## Planned direction
+
+The library currently focuses on small React hooks and frontend utilities.
+
+Future additions may include stable event callbacks and other focused wrappers
+around common React patterns.
+
+The API may evolve while the package remains below `1.0.0`.
 
 ## Development
 
