@@ -4,8 +4,7 @@
 
 Small practical utilities for React and TypeScript applications.
 
-> **Status:** pre-release. Version `0.0.0` only reserves the package name.
-> There is no usable public API yet. The first usable release is planned as `0.1.0`.
+> **Status:** early development. The API may evolve before `1.0.0`.
 
 ## What is react-swissbit?
 
