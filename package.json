@@ -1,6 +1,6 @@
 {
     "name": "react-swissbit",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "packageManager": "pnpm@11.1.2",
     "description": "Small practical utilities for React and TypeScript applications",
     "keywords": [
