@@ -152,6 +152,43 @@ After the first committed render, the hook returns actual previous values.
 
 The hook preserves values as-is, including object references.
 
+#### `useHandler`
+
+Returns a stable function that always invokes the latest provided handler.
+
+Unlike `useCallback`, changing the handler does not change the reference of the
+function returned by `useHandler`. This can be useful when a callback needs
+access to the latest props or state but should keep a stable identity across
+renders.
+
+```tsx
+import {useHandler} from 'react-swissbit';
+
+function Counter({count}: {count: number}) {
+    const handleClick = useHandler(() => {
+        console.log(`Current count: ${count}`);
+    });
+
+    return <button onClick={handleClick}>Log count</button>;
+}
+```
+
+Signature:
+
+```ts
+useHandler<F extends (...args: never[]) => unknown>(fn: F): F;
+```
+
+The returned function:
+
+- keeps the same reference across renders;
+- accepts the same arguments as the provided handler;
+- returns the handler's return value;
+- invokes the latest handler after each committed render.
+
+This makes `useHandler` useful for callbacks whose identity should remain stable
+without capturing stale values from an earlier render.
+
 ## Planned direction
 
 The library currently focuses on small React hooks and frontend utilities.
