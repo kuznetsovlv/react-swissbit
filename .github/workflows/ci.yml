@@ -33,11 +33,11 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Check formatting
-              run: pnpm format:check
+            - name: Check Prettier formatting
+              run: pnpm prettier:check
 
             - name: Run ESLint
-              run: pnpm lint
+              run: pnpm lint:check
 
             - name: Run TypeScript check
               run: pnpm typecheck

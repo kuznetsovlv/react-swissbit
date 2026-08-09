@@ -314,19 +314,22 @@ build, and a dry-run package archive.
 
 ### Useful commands
 
-| Command             | Purpose                                                                                      |
-| ------------------- | -------------------------------------------------------------------------------------------- |
-| `pnpm build`        | Build ESM, CommonJS, and type declarations                                                   |
-| `pnpm test`         | Run the test suite once                                                                      |
-| `pnpm test:watch`   | Run tests in watch mode                                                                      |
-| `pnpm coverage`     | Run tests with coverage<br/>Open the local HTML coverage report:xdg-open coverage/index.html |
-| `pnpm lint`         | Run ESLint                                                                                   |
-| `pnpm typecheck`    | Run TypeScript without emitting files                                                        |
-| `pnpm format`       | Format files with Prettier                                                                   |
-| `pnpm format:check` | Check formatting                                                                             |
-| `pnpm pack:check`   | Inspect the package tarball without publishing                                               |
-| `pnpm check`        | Run the full local quality pipeline                                                          |
-| `pnpm changeset`    | Describe a user-facing change for a future release                                           |
+| Command               | Purpose                                                                                      |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| `pnpm build`          | Build ESM, CommonJS, and type declarations                                                   |
+| `pnpm test`           | Run the test suite once                                                                      |
+| `pnpm test:watch`     | Run tests in watch mode                                                                      |
+| `pnpm coverage`       | Run tests with coverage<br/>Open the local HTML coverage report:xdg-open coverage/index.html |
+| `pnpm prettier`       | Format files with Prettier                                                                   |
+| `pnpm prettier:check` | Check Prettier formatting                                                                    |
+| `pnpm lint`           | Run ESLint and automatically fix issues                                                      |
+| `pnpm lint:check`     | Run ESLint without modifying files                                                           |
+| `pnpm format`         | Run all formatting and lint autofixes                                                        |
+| `pnpm format:check`   | Check formatting and linting without changes                                                 |
+| `pnpm typecheck`      | Run TypeScript without emitting files                                                        |
+| `pnpm pack:check`     | Inspect the package tarball without publishing                                               |
+| `pnpm check`          | Run the full local quality pipeline                                                          |
+| `pnpm changeset`      | Describe a user-facing change for a future release                                           |
 
 ## Releases
 
