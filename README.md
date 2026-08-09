@@ -115,6 +115,43 @@ dependencies.
 `initialValue` is only used to initialize the state. Changing it on a later
 render does not reset the current value.
 
+#### `usePrevious`
+
+Returns the value from the previous committed render.
+
+By default, the hook returns `undefined` on the initial render. An optional
+initial previous value can be provided when a defined value is needed from the
+first render.
+
+```tsx
+import {usePrevious} from 'react-swissbit';
+
+function Counter({count}: {count: number}) {
+    const previousCount = usePrevious(count, 0);
+
+    return (
+        <p>
+            Current: {count}, previous: {previousCount}
+        </p>
+    );
+}
+```
+
+Signatures:
+
+```ts
+usePrevious<T>(value: T): T | undefined;
+usePrevious<T>(value: T, initialPreviousValue: T): T;
+```
+
+Without `initialPreviousValue`, the hook returns `undefined` on the initial
+render.
+
+When `initialPreviousValue` is provided, it is returned on the initial render.
+After the first committed render, the hook returns actual previous values.
+
+The hook preserves values as-is, including object references.
+
 ## Planned direction
 
 The library currently focuses on small React hooks and frontend utilities.
