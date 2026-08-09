@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+### Minor Changes
+
+- 6bace45: Add usePrevious, useHandler, and lifecycle hooks for common React patterns.
+
 ## 0.1.1
 
 ### Patch Changes
