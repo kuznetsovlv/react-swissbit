@@ -38,11 +38,14 @@ describe('useHandler', () => {
     });
 
     it('keeps the same function reference across renders', () => {
+        const firstHandler: () => string = () => 'first';
+        const secondHandler: () => string = () => 'second';
+
         const {result, rerender} = renderHook(
             ({handler}) => useHandler(handler),
             {
                 initialProps: {
-                    handler: () => 'first',
+                    handler: firstHandler,
                 },
             }
         );
@@ -50,7 +53,7 @@ describe('useHandler', () => {
         const firstReference = result.current;
 
         rerender({
-            handler: () => 'second',
+            handler: secondHandler,
         });
 
         expect(result.current).toBe(firstReference);

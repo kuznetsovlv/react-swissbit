@@ -189,6 +189,103 @@ The returned function:
 This makes `useHandler` useful for callbacks whose identity should remain stable
 without capturing stale values from an earlier render.
 
+#### `useOnMount`
+
+Runs a callback after the component is mounted.
+
+```tsx
+import {useOnMount} from 'react-swissbit';
+
+function Example() {
+    useOnMount(() => {
+        console.log('Mounted');
+    });
+
+    return <div>Example</div>;
+}
+```
+
+Signature:
+
+```ts
+useOnMount(fn: () => void): void;
+```
+
+The callback runs after the initial committed render and is not called again on
+ordinary rerenders.
+
+> **React Strict Mode:** in development, React may run Effects an additional
+> time to verify that their setup and cleanup logic is safe. As a result, the
+> callback passed to `useOnMount` may be invoked more than once during
+> development. Code using this hook should not rely on the callback being
+> executed exactly once for the entire lifetime of the application.
+
+#### `useOnLayoutMount`
+
+Runs a callback synchronously after the component is mounted and before the
+browser repaints the screen.
+
+```tsx
+import {useOnLayoutMount} from 'react-swissbit';
+
+function Example() {
+    useOnLayoutMount(() => {
+        measureLayout();
+    });
+
+    return <div>Example</div>;
+}
+```
+
+Signature:
+
+```ts
+useOnLayoutMount(fn: () => void): void;
+```
+
+This hook uses `useLayoutEffect`. Prefer `useOnMount` unless the callback needs
+to run before paint, such as when measuring or synchronously adjusting layout.
+
+The callback is not called again on ordinary rerenders.
+
+> **React Strict Mode:** in development, React may run Layout Effects an
+> additional time to verify their setup and cleanup logic. Therefore, the
+> callback passed to `useOnLayoutMount` may be invoked more than once during
+> development.
+
+#### `useOnUnmount`
+
+Runs the latest provided callback when the component is unmounted.
+
+```tsx
+import {useOnUnmount} from 'react-swissbit';
+
+function Example() {
+    useOnUnmount(() => {
+        connection.close();
+    });
+
+    return <div>Example</div>;
+}
+```
+
+Signature:
+
+```ts
+useOnUnmount(fn: () => void): void;
+```
+
+The callback is not invoked on ordinary rerenders. If a new callback is
+provided during the component's lifetime, the latest callback from the most
+recently committed render is used when cleanup runs.
+
+> **React Strict Mode:** in development, React may run an additional Effect
+> setup and cleanup cycle without permanently unmounting the component.
+> Consequently, the callback passed to `useOnUnmount` may run during this
+> development-only cleanup as well as when the component is actually
+> unmounted. Do not use this hook as a guarantee that the callback means the
+> component has been permanently removed from the application.
+
 ## Planned direction
 
 The library currently focuses on small React hooks and frontend utilities.
