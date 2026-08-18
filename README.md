@@ -115,6 +115,40 @@ dependencies.
 `initialValue` is only used to initialize the state. Changing it on a later
 render does not reset the current value.
 
+#### `useConstant`
+
+Returns the value provided on the initial render and keeps it unchanged for the lifetime of the component.
+
+```tsx
+import {useConstant} from 'react-swissbit';
+
+function Example({options}: {options: Options}) {
+    const initialOptions = useConstant(options);
+
+    return <Widget options={initialOptions} />;
+}
+```
+
+Signature:
+
+```ts
+useConstant<T>(value: T): T;
+```
+
+The value passed on the initial render is preserved as-is. Values passed on later renders are ignored, including when their identity changes.
+
+Object and function references are preserved without copying or invoking them.
+
+`useConstant` preserves an already evaluated value. It does not provide lazy initialization: expressions passed as arguments are still evaluated before the hook is called on every render.
+
+For example:
+
+```tsx
+const value = useConstant(createExpensiveObject());
+```
+
+`createExpensiveObject()` is still called on every render. Only the value returned during the initial render is preserved by `useConstant`.
+
 #### `usePrevious`
 
 Returns the value from the previous committed render.
