@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Minor Changes
+
+- 6d083bd: Added useConstant, useOptions and useCyclicOptions hooks
+
 ## 0.2.0
 
 ### Minor Changes
