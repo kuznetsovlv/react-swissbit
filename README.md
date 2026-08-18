@@ -115,6 +115,183 @@ dependencies.
 `initialValue` is only used to initialize the state. Changing it on a later
 render does not reset the current value.
 
+#### `useOptions`
+
+Manages a value selected from a fixed list of options.
+
+The hook provides methods for moving forward and backward through the list,
+jumping to its boundaries, or selecting an option explicitly.
+
+Navigation stops at the boundaries. Calling `next()` while the last option is
+selected or `previous()` while the first option is selected leaves the current
+option unchanged.
+
+```tsx
+import {useOptions} from 'react-swissbit';
+
+const sizes = ['small', 'medium', 'large'] as const;
+
+function SizeSelector() {
+    const [size, {next, previous, begin, end, set}] = useOptions(
+        sizes,
+        'medium'
+    );
+
+    return (
+        <div>
+            <p>Selected size: {size}</p>
+
+            <button onClick={previous}>Previous</button>
+            <button onClick={next}>Next</button>
+            <button onClick={begin}>First</button>
+            <button onClick={end}>Last</button>
+            <button onClick={() => set('medium')}>Medium</button>
+        </div>
+    );
+}
+```
+
+Signature:
+
+```ts
+useOptions<T>(
+    options: readonly T[],
+    initialOption?: T
+): [T, OptionsMethods<T>];
+```
+
+`options` must contain at least one element and must not contain duplicate
+values.
+
+`initialOption` must be one of the provided options. When omitted, the first
+option is selected.
+
+The options and initial option are captured on the initial render. Changes to
+either argument on later renders are ignored.
+
+The returned methods object and all of its methods have stable references
+across renders.
+
+> **Note:** `NaN` is currently not supported as an option. Its JavaScript
+> equality behavior is incompatible with the option lookup used internally by
+> this hook.
+
+#### `useCyclicOptions`
+
+Manages a value selected from a fixed list of options with cyclic navigation.
+
+It provides the same API as `useOptions`, but navigation wraps around the list.
+Calling `next()` while the last option is selected moves to the first option,
+and calling `previous()` while the first option is selected moves to the last
+option.
+
+```tsx
+import {useCyclicOptions} from 'react-swissbit';
+
+const themes = ['light', 'dark', 'system'] as const;
+
+function ThemeSelector() {
+    const [theme, {next, previous}] = useCyclicOptions(themes);
+
+    return (
+        <div>
+            <p>Theme: {theme}</p>
+
+            <button onClick={previous}>Previous theme</button>
+            <button onClick={next}>Next theme</button>
+        </div>
+    );
+}
+```
+
+Signature:
+
+```ts
+useCyclicOptions<T>(
+    options: readonly T[],
+    initialOption?: T
+): [T, OptionsMethods<T>];
+```
+
+The same validation, initial-value, snapshot, and stable-reference guarantees
+as `useOptions` apply.
+
+A list containing a single option is valid. In that case, navigation keeps the
+same option selected.
+
+#### Options methods
+
+Both `useOptions` and `useCyclicOptions` return an `OptionsMethods<T>` object:
+
+```ts
+interface OptionsMethods<T> {
+    next: () => void;
+    previous: () => void;
+    begin: () => void;
+    end: () => void;
+    set: (value: T) => void;
+}
+```
+
+| Method       | Description                 |
+| ------------ | --------------------------- |
+| `next()`     | Selects the next option     |
+| `previous()` | Selects the previous option |
+| `begin()`    | Selects the first option    |
+| `end()`      | Selects the last option     |
+| `set(value)` | Selects a specific option   |
+
+`set(value)` throws if the supplied value is not one of the configured options.
+
+For object options, values are matched by reference:
+
+```tsx
+const compact = {columns: 1};
+const detailed = {columns: 3};
+
+const [layout, {set}] = useOptions([compact, detailed]);
+
+set(detailed);
+```
+
+> **Note:** `NaN` is currently not supported as an option. Its JavaScript
+> equality behavior is incompatible with the option lookup used internally by
+> this hook.
+
+#### `useConstant`
+
+Returns the value provided on the initial render and keeps it unchanged for the lifetime of the component.
+
+```tsx
+import {useConstant} from 'react-swissbit';
+
+function Example({options}: {options: Options}) {
+    const initialOptions = useConstant(options);
+
+    return <Widget options={initialOptions} />;
+}
+```
+
+Signature:
+
+```ts
+useConstant<T>(value: T): T;
+```
+
+The value passed on the initial render is preserved as-is. Values passed on later renders are ignored, including when their identity changes.
+
+Object and function references are preserved without copying or invoking them.
+
+`useConstant` preserves an already evaluated value. It does not provide lazy initialization: expressions passed as arguments are still evaluated before the hook is called on every render.
+
+For example:
+
+```tsx
+const value = useConstant(createExpensiveObject());
+```
+
+`createExpensiveObject()` is still called on every render. Only the value returned during the initial render is preserved by `useConstant`.
+
 #### `usePrevious`
 
 Returns the value from the previous committed render.
