@@ -1,4 +1,20 @@
-# react-swissbit
+<p align="center">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="./logo/logo_dark.png"
+    />
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="./logo/logo_light.png"
+    />
+    <img
+      src="./logo/logo_light.png"
+      alt="react-swissbit"
+      width="760"
+    />
+  </picture>
+</p>
 
 [![CI](https://github.com/kuznetsovlv/react-swissbit/actions/workflows/ci.yml/badge.svg)](https://github.com/kuznetsovlv/react-swissbit/actions/workflows/ci.yml)
 
@@ -9,6 +25,24 @@ Small practical utilities for React and TypeScript applications.
 [Coverage report](https://kuznetsovlv.github.io/react-swissbit/)
 
 ## What is react-swissbit?
+
+<p align="center">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="./logo/sbit_dark.png"
+    />
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="./logo/sbit_light.png"
+    />
+    <img
+      src="./logo/sbit_light.png"
+      alt="Swissbit mascot"
+      width="320"
+    />
+  </picture>
+</p>
 
 `react-swissbit` is a collection of small, focused utilities for recurring React
 and TypeScript tasks.
