@@ -497,6 +497,96 @@ recently committed render is used when cleanup runs.
 > unmounted. Do not use this hook as a guarantee that the callback means the
 > component has been permanently removed from the application.
 
+#### `useResizeObserver`
+
+Observes size changes of one or more elements.
+
+Unlike using `ResizeObserver` directly, the callback is deferred until the next
+animation frame. This allows layout changes triggered by the callback to happen
+outside the current ResizeObserver notification cycle and helps avoid
+`ResizeObserver` loop errors.
+
+```tsx
+import {useCallback, useEffect, useRef} from 'react';
+import {useResizeObserver} from 'react-swissbit';
+
+function ResizablePanel() {
+    const ref = useRef<HTMLDivElement>(null);
+
+    const handleResize = useCallback((entries: ResizeObserverEntry[]) => {
+        for (const entry of entries) {
+            console.log(entry.contentRect.width);
+        }
+    }, []);
+
+    const [observe, unobserve] = useResizeObserver(handleResize);
+
+    useEffect(() => {
+        const element = ref.current;
+
+        if (!element) {
+            return;
+        }
+
+        observe(element);
+
+        return () => {
+            unobserve(element);
+        };
+    }, [observe, unobserve]);
+
+    return <div ref={ref}>Resizable content</div>;
+}
+```
+
+Signature:
+
+```ts
+useResizeObserver(
+    callback: (entries: ResizeObserverEntry[]) => void,
+    box?: ResizeObserverBoxOptions
+): [observe: ElementCallback, unobserve: ElementCallback];
+```
+
+The default box is `content-box`. The other standard `ResizeObserver` box
+options can be passed as the second argument:
+
+```ts
+const [observe, unobserve] = useResizeObserver(handleResize, 'border-box');
+```
+
+A single hook instance can observe multiple elements:
+
+```ts
+observe(header);
+observe(content);
+observe(sidebar);
+
+unobserve(content);
+```
+
+Both `observe` and `unobserve` accept either an `Element` or a React
+`RefObject` containing an element.
+
+Resize notifications received before the next animation frame are batched into
+a single callback invocation. If the same element produces multiple entries
+before that frame, only its latest entry is passed to the callback.
+
+Changing `callback` or `box` recreates the underlying `ResizeObserver`.
+Elements that are still registered with the hook are automatically observed
+again by the new observer.
+
+If observer recreation on every render is not desired, pass a stable callback,
+for example with `useCallback`.
+
+The returned `observe` and `unobserve` functions keep stable references across
+renders.
+
+Deferring the callback prevents a ResizeObserver notification loop from
+continuing within the same frame. It does not prevent logical feedback loops
+that repeatedly change an observed element's size across multiple animation
+frames.
+
 ## Planned direction
 
 The library currently focuses on small React hooks and frontend utilities.
