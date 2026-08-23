@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+### Minor Changes
+
+- ecea876: Added useResizeObserver hook
+
 ## 0.3.1
 
 ### Patch Changes
