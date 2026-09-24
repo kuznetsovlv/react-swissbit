@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+### Minor Changes
+
+- c87efb1: Created useOnMountAndUnmount and useOnLayoutMountAndUnmount
+
 ## 0.4.0
 
 ### Minor Changes
