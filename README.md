@@ -497,6 +497,119 @@ recently committed render is used when cleanup runs.
 > unmounted. Do not use this hook as a guarantee that the callback means the
 > component has been permanently removed from the application.
 
+#### `useOnMountAndUnmount`
+
+Runs a setup callback after mount and passes its result to a cleanup callback
+when the component is unmounted.
+
+This is useful when cleanup needs access to a resource or value created during
+mount.
+
+```tsx
+import {useOnMountAndUnmount} from 'react-swissbit';
+
+function Connection() {
+    useOnMountAndUnmount(
+        () => new WebSocket('wss://example.com'),
+        (socket) => {
+            socket.close();
+        }
+    );
+
+    return null;
+}
+```
+
+Signature:
+
+```ts
+useOnMountAndUnmount<T>(
+    onMount: () => T,
+    onUnmount: (value: T) => void
+): void;
+```
+
+`onMount` runs after the initial committed render. Its return value is preserved
+and later passed to `onUnmount`.
+
+Changes to `onMount` after the initial render are ignored.
+
+The latest `onUnmount` callback from the most recently committed render is used
+for cleanup. This allows the cleanup callback to use current props or state
+while still receiving the value created by the original mount callback.
+
+```tsx
+function Subscription({logger}: Props) {
+    useOnMountAndUnmount(
+        () => createSubscription(),
+        (subscription) => {
+            logger.log('Closing subscription');
+            subscription.close();
+        }
+    );
+
+    return null;
+}
+```
+
+> **React Strict Mode:** in development, React may run an additional Effect
+> setup and cleanup cycle without permanently unmounting the component.
+> Consequently, the callback passed to `useOnUnmount` may run during this
+> development-only cleanup as well as when the component is actually
+> unmounted. Do not use this hook as a guarantee that the callback means the
+> component has been permanently removed from the application.
+
+#### `useOnLayoutMountAndUnmount`
+
+Works like `useOnMountAndUnmount`, but uses the layout effect lifecycle.
+
+The setup callback runs synchronously after the component has been mounted and
+before the browser repaints the screen. Its result is passed to the latest
+cleanup callback when the layout effect is cleaned up.
+
+```tsx
+import {useOnLayoutMountAndUnmount} from 'react-swissbit';
+
+function MeasuredElement() {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useOnLayoutMountAndUnmount(
+        () => ref.current?.getBoundingClientRect(),
+        (initialRect) => {
+            if (initialRect) {
+                console.log(initialRect);
+            }
+        }
+    );
+
+    return <div ref={ref}>Content</div>;
+}
+```
+
+Signature:
+
+```ts
+useOnLayoutMountAndUnmount<T>(
+    onMount: () => T,
+    onUnmount: (value: T) => void
+): void;
+```
+
+Use this variant only when setup or cleanup needs to happen as part of the
+layout effect lifecycle, for example when working with DOM measurements or
+other synchronous layout-related operations.
+
+As with `useOnMountAndUnmount`, changes to `onMount` after the initial render
+are ignored, while the latest committed `onUnmount` callback is used for
+cleanup.
+
+> **React Strict Mode:** in development, React may run an additional Effect
+> setup and cleanup cycle without permanently unmounting the component.
+> Consequently, the callback passed to `useOnUnmount` may run during this
+> development-only cleanup as well as when the component is actually
+> unmounted. Do not use this hook as a guarantee that the callback means the
+> component has been permanently removed from the application.
+
 #### `useResizeObserver`
 
 Observes size changes of one or more elements.
