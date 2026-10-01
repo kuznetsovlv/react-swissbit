@@ -700,6 +700,144 @@ continuing within the same frame. It does not prevent logical feedback loops
 that repeatedly change an observed element's size across multiple animation
 frames.
 
+#### `useRerender`
+
+Returns a stable function that forces the component to rerender.
+
+```tsx
+import {useRef} from 'react';
+import {useRerender} from 'react-swissbit';
+
+function Example() {
+    const valueRef = useRef(0);
+    const rerender = useRerender();
+
+    const increment = () => {
+        valueRef.current++;
+        rerender();
+    };
+
+    return <button onClick={increment}>Value: {valueRef.current}</button>;
+}
+```
+
+Signature:
+
+```ts
+useRerender(): () => void;
+```
+
+The returned function keeps the same reference across renders.
+
+> **Warning:** Forcing a component to rerender manually is generally an
+> anti-pattern and should be avoided when the same behavior can be represented
+> with normal React state, props, context, or an external-store subscription.
+>
+> If `useRerender` appears necessary, it is worth reconsidering the component's
+> state model and architecture before using it. Treat this hook primarily as an
+> escape hatch for cases where mutable state intentionally lives outside
+> React's normal state model.
+
+#### `useUpdatableState`
+
+Manages local state that can be reset when an externally provided state value
+changes.
+
+While `stateValue` remains equal to its previous value, the hook behaves
+similarly to `useState`: local updates made with the returned setter are
+preserved.
+
+When `stateValue` changes, the new external value replaces the current local
+state during the same render. The hook does not schedule an additional render
+just to synchronize the local state with the new external value.
+
+```tsx
+import {useUpdatableState} from 'react-swissbit';
+
+interface EditorProps {
+    initialName: string;
+}
+
+function Editor({initialName}: EditorProps) {
+    const [name, setName] = useUpdatableState(initialName);
+
+    return (
+        <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+        />
+    );
+}
+```
+
+Local changes are preserved while `initialName` stays the same:
+
+```ts
+setName('Locally edited name');
+```
+
+If the parent later provides a different `initialName`, the local state is
+reset to that new value without an additional synchronization render.
+
+Signature:
+
+```ts
+useUpdatableState<S>(
+    stateValue: S | (() => S),
+    isEqual?: (
+        a: S | (() => S),
+        b: S | (() => S)
+    ) => boolean
+): [S, Dispatch<SetStateAction<S>>];
+```
+
+By default, external state values are compared using `Object.is`.
+
+A custom comparator can be provided when different equality semantics are
+needed:
+
+```tsx
+interface Value {
+    id: number;
+    label: string;
+}
+
+const [value, setValue] = useUpdatableState(
+    externalValue,
+    (a, b) =>
+        typeof a !== 'function' && typeof b !== 'function' && a.id === b.id
+);
+```
+
+If the comparator considers the new `stateValue` equal to the previous one,
+the current local state is preserved. If it considers the value different, the
+local state is reset from the new external value.
+
+`stateValue` may also be a lazy initializer:
+
+```ts
+const [value, setValue] = useUpdatableState(() => createInitialValue());
+```
+
+As with React state initializers and functional state updates, functions have
+special meaning in this API:
+
+- a function passed as `stateValue` is treated as a lazy initializer;
+- a function passed to the setter is treated as a functional state updater.
+
+To store a function itself as state, wrap it in another function.
+
+The returned setter supports the usual `SetStateAction` forms:
+
+```ts
+setValue(nextValue);
+
+setValue((previous) => update(previous));
+```
+
+If a new external `stateValue` replaces the local state, later functional
+updates use that new state as their starting value.
+
 ## Planned direction
 
 The library currently focuses on small React hooks and frontend utilities.
