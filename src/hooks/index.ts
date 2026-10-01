@@ -4,6 +4,7 @@ export * from './useCyclicOptions';
 export * from './useHandler';
 export * from './useOptions';
 export * from './usePrevious';
+export * from './useRerender';
 export * from './useResizeObserver';
 export * from './useToggle';
-export type {OptionsMethods} from '@/types';
+export * from './useUpdatableState';
