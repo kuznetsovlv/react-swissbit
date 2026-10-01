@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+### Minor Changes
+
+- c3243cb: Add useRerender and useUpdatableState for manual rerenders and local state that resets when its external value changes.
+
 ## 0.5.0
 
 ### Minor Changes
